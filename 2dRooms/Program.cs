@@ -7,6 +7,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
+var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,5 +24,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/", () => $"The API is up and running. Connection string found: {(sqlConnectionStringFound ? "IsFound" : "")}");
 
 app.Run();

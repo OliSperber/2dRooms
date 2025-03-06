@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>_2dRooms</RootNamespace>
+    <UserSecretsId>a09b7a90-58a2-4fab-8d92-c96ae3b3a10b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
