@@ -51,6 +51,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/test", () => $"The API is up and running. Connection string found: {(sqlConnectionStringFound ? "IsFound" : "")}");
+app.MapGet("/", () => $"The API is up and running. Connection string found: {(sqlConnectionStringFound ? "IsFound" : "")}");
 
 app.Run();
