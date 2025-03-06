@@ -45,11 +45,32 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGroup("/account")
+    .MapIdentityApi<IdentityUser>();
+
+app.MapPost("/account/logout",
+    async (SignInManager<IdentityUser> signInManager,
+    [FromBody] object empty) =>
+    {
+        if (empty != null)
+        {
+            await signInManager.SignOutAsync();
+            return Results.Ok();
+        }
+        return Results.Unauthorized();
+    })
+    .RequireAuthorization();
+
+app.MapControllers().RequireAuthorization();
+
 
 app.MapGet("/", () => $"The API is up and running. Connection string found: {(sqlConnectionStringFound ? "IsFound" : "")}");
 
