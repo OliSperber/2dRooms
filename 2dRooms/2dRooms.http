@@ -1,0 +1,6 @@
+@_2dRooms_HostAddress = http://localhost:5162
+
+GET {{_2dRooms_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
