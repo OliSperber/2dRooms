@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace _2dRooms.Services;
 
-public class SqlService
+public abstract class SqlService
 {
     protected readonly string sqlConnectionString;
 

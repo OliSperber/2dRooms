@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2dRooms", "2dRooms\2dRooms.csproj", "{0CED4EE2-A2A7-4C7C-9499-1ED257BD197A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2dRooms.Tests", "2dRooms.Tests\2dRooms.Tests.csproj", "{71AAFD18-3462-471B-A9F5-35006D450A68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0CED4EE2-A2A7-4C7C-9499-1ED257BD197A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CED4EE2-A2A7-4C7C-9499-1ED257BD197A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CED4EE2-A2A7-4C7C-9499-1ED257BD197A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71AAFD18-3462-471B-A9F5-35006D450A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71AAFD18-3462-471B-A9F5-35006D450A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71AAFD18-3462-471B-A9F5-35006D450A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71AAFD18-3462-471B-A9F5-35006D450A68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -84,8 +84,15 @@ public class Environment2DController : ControllerBase
             return Forbid(); // If the user is not authorized to create this environment
         }
 
-        await _environmentRepository.CreateAsync(environment);
-        return CreatedAtAction(nameof(GetEnvironmentById), new { id = environment.Id }, environment);
+        try
+        {
+            await _environmentRepository.CreateAsync(environment);
+            return CreatedAtAction(nameof(GetEnvironmentById), new { id = environment.Id }, environment);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message); // Send error message to the client
+        }
     }
 
     // PUT: api/environment2d/{id}
