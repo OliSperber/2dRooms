@@ -25,6 +25,11 @@ public class Environment2DController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllEnvironments()
     {
+        foreach (var claim in User.Claims)
+        {
+            Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+        }
+
         var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
@@ -72,7 +77,9 @@ public class Environment2DController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateEnvironment([FromBody] Environment2D environment)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+
+
+        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the token
 
         if (string.IsNullOrEmpty(userId))
         {
