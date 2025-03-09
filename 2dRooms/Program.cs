@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +79,43 @@ app.MapControllers();
 app.MapGroup("/account")
     .MapIdentityApi<IdentityUser>();
 
+// Create a custom login endpoint to generate JWT token
+app.MapPost("/account/login", async (SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, [FromBody] LoginModel loginModel) =>
+{
+    // Step 1: Authenticate the user with username/email and password
+    var user = await userManager.FindByEmailAsync(loginModel.Email);
+    if (user == null || !(await signInManager.CheckPasswordSignInAsync(user, loginModel.Password, false)).Succeeded)
+    {
+        return Results.Unauthorized();
+    }
+
+    // Step 2: Create the JWT Token
+    var claims = new[]
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Email, user.Email),
+        // Add additional claims here (e.g., roles, permissions, etc.)
+    };
+
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])); // Secret key for signing
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: builder.Configuration["Jwt:Issuer"], // Issuer
+        audience: builder.Configuration["Jwt:Audience"], // Audience
+        claims: claims,
+        expires: DateTime.Now.AddMinutes(60), // Set expiration time
+        signingCredentials: creds
+    );
+
+    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+    // Step 3: Return the generated JWT token
+    return Results.Ok(new { token = tokenString });
+})
+.RequireAuthorization();
+
 // Log out functionality with Bearer token
 app.MapPost("/account/logout", async (SignInManager<IdentityUser> signInManager, [FromBody] object empty) =>
 {
@@ -91,3 +132,9 @@ app.MapControllers().RequireAuthorization();
 app.MapGet("/", () => $"The API is up and running. Connection string found: {(sqlConnectionStringFound ? "True " : "False")}");
 
 app.Run();
+
+public class LoginModel
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+}
