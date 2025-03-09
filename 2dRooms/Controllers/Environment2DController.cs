@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using _2dRooms.Services;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Security.Claims;
 
 namespace _2dRooms.Controllers;
 
@@ -25,7 +26,7 @@ public class Environment2DController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllEnvironments()
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -47,7 +48,7 @@ public class Environment2DController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEnvironmentById(string id)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -74,7 +75,7 @@ public class Environment2DController : ControllerBase
     {
 
 
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -101,7 +102,7 @@ public class Environment2DController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEnvironment(string id, [FromBody] Environment2D environment)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -127,7 +128,7 @@ public class Environment2DController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEnvironment(string id)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {

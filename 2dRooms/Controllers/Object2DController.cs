@@ -3,6 +3,7 @@ using _2dRooms.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using _2dRooms.Services;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace _2dRooms.Controllers;
 
@@ -24,7 +25,7 @@ public class Object2DController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetObjectsByEnvironmentId(string environmentId)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -49,7 +50,7 @@ public class Object2DController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetObjectById(string environmentId, string id)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -74,7 +75,7 @@ public class Object2DController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateObject(string environmentId, [FromBody] Object2D object2D)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -96,7 +97,7 @@ public class Object2DController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateObject(string environmentId, string id, [FromBody] Object2D object2D)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -122,7 +123,7 @@ public class Object2DController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteObject(string environmentId, string id)
     {
-        var userId = User.FindFirst("sub")?.Value; // Get the user ID from the JWT token
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
 
         if (string.IsNullOrEmpty(userId))
         {
