@@ -97,7 +97,7 @@ app.MapPost("/account/login/jwt", async (SignInManager<IdentityUser> signInManag
         // Add additional claims here (e.g., roles, permissions, etc.)
     };
 
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])); // Secret key for signing
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretJwtKey"))); // Secret key for signing
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
