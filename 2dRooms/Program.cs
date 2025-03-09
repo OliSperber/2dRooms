@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 // Read SQL connection string
 var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
 var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
+var jwtSecret = builder.Configuration.GetValue<string>("SecretJwtKey");
 
 // Set up Identity and Dapper stores for IdentityUser
 builder.Services.AddAuthorization();
@@ -46,32 +47,37 @@ builder.Services
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Jwt:Authority"];
-        options.Audience = builder.Configuration["Jwt:Audience"];
+        options.Authority = builder.Configuration["Jwt:Authority"]; // Authority URL
+        options.Audience = builder.Configuration["Jwt:Audience"];   // Audience
         options.RequireHttpsMetadata = true;
 
+        // Token validation parameters
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+            ValidateIssuerSigningKey = true, // Make sure this is set to true
+
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            ClockSkew = TimeSpan.Zero
+
+            // Fetch the key from your database or environment variable
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+
+            // Optional: Define the clock skew (tolerance for expiration times)
+            ClockSkew = TimeSpan.Zero // This removes any grace period for token expiration
         };
 
         options.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = context =>
             {
-                // Log or inspect the error details
-                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
             {
-                // Log or inspect the validated token claims
                 var userClaims = context.Principal?.Claims;
                 Console.WriteLine("Token validated successfully, claims: " + string.Join(", ", userClaims.Select(c => c.Value)));
                 return Task.CompletedTask;
@@ -118,7 +124,7 @@ app.MapPost("/account/login/jwt", async (SignInManager<IdentityUser> signInManag
         // Add additional claims here (e.g., roles, permissions, etc.)
     };
 
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("SecretJwtKey"))); // Secret key for signing
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)); // Secret key for signing
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
