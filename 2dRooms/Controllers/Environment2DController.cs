@@ -73,18 +73,12 @@ public class Environment2DController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateEnvironment([FromBody] Environment2D environment)
     {
-
-
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the token
+        environment.UserId = userId;
 
         if (string.IsNullOrEmpty(userId))
         {
             return Unauthorized("User not authenticated.");
-        }
-
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environment.Id))
-        {
-            return Forbid(); // If the user is not authorized to create this environment
         }
 
         try
