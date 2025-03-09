@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using _2dRooms.Models;
 using _2dRooms.Repositories;
+using _2dRooms.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 using Dapper;
@@ -21,7 +22,7 @@ namespace _2dRooms.Tests.Tests.Controllers
             UserId = "test"
         };
 
-        private Environment2DRepository repository = new("FakeConnectionString");
+        private Environment2DRepository repository = new(new ConnectionStringService("FakeConnectionString"));
 
         [TestMethod]
         [DataRow(10, 50)] // lowest possible height
