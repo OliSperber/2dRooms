@@ -1,4 +1,5 @@
 using _2dRooms.Repositories;
+using _2dRooms.Services;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,9 @@ builder.Services.AddScoped<IObject2DRepository, Object2DRepository>();
 // Read SQL connection string
 var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
 var sqlConnectionStringFound = !string.IsNullOrWhiteSpace(sqlConnectionString);
+
+builder.Services.AddSingleton(new ConnectionStringService(sqlConnectionString));
+
 var jwtSecret = builder.Configuration.GetValue<string>("SecretJwtKey");
 
 // Set up Identity and Dapper stores for IdentityUser

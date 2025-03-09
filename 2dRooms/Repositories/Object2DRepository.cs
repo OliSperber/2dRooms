@@ -9,7 +9,7 @@ namespace _2dRooms.Repositories;
 
 public class Object2DRepository : SqlService, IObject2DRepository
 {
-    public Object2DRepository(string connectionString) : base(connectionString)
+    public Object2DRepository(ConnectionStringService connectionStringService) : base(connectionStringService)
     {
     }
 

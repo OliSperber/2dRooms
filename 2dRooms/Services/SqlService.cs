@@ -7,9 +7,11 @@ public abstract class SqlService
 {
     protected readonly string sqlConnectionString;
 
-    protected SqlService(string connectionString)
+    // Constructor that receives the connection string
+    protected SqlService(ConnectionStringService connectionStringService)
     {
-        sqlConnectionString = connectionString;
+        // Get the connection string from the injected service
+        sqlConnectionString = connectionStringService.GetConnectionString();
     }
 
     protected IDbConnection CreateConnection()
@@ -17,4 +19,3 @@ public abstract class SqlService
         return new SqlConnection(sqlConnectionString);
     }
 }
-

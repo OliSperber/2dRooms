@@ -10,7 +10,7 @@ namespace _2dRooms.Repositories;
 
 public class Environment2DRepository : SqlService, IEnvironment2DRepository
 {
-    public Environment2DRepository(string connectionString) : base(connectionString)
+    public Environment2DRepository(ConnectionStringService connectionStringService) : base(connectionStringService)
     {
     }
 
