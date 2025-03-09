@@ -80,7 +80,7 @@ app.MapGroup("/account")
     .MapIdentityApi<IdentityUser>();
 
 // Create a custom login endpoint to generate JWT token
-app.MapPost("/account/login", async (SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, [FromBody] LoginModel loginModel) =>
+app.MapPost("/account/login/jwt", async (SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, [FromBody] LoginModel loginModel) =>
 {
     // Step 1: Authenticate the user with username/email and password
     var user = await userManager.FindByEmailAsync(loginModel.Email);
