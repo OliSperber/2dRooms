@@ -1,3 +1,4 @@
+using _2dRooms.Repositories;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IEnvironment2DRepository, Environment2DRepository>();
+builder.Services.AddScoped<IObject2DRepository, Object2DRepository>();
+
 
 // Read SQL connection string
 var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
