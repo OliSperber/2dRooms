@@ -16,7 +16,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
 
     public async Task<IEnumerable<Environment2D>> GetAllAsync(string userId)
     {
-        var query = "SELECT * FROM Environment2Ds WHERE UserId = @UserId";
+        var query = "SELECT * FROM Environment2D WHERE UserId = @UserId";
         using (var dbConnection = CreateConnection())
         {
             return await dbConnection.QueryAsync<Environment2D>(query, new { UserId = userId });
@@ -25,7 +25,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
 
     public async Task<Environment2D> GetByIdAsync(string id)
     {
-        var query = "SELECT * FROM Environment2Ds WHERE Id = @Id";
+        var query = "SELECT * FROM Environment2D WHERE Id = @Id";
         using (var dbConnection = CreateConnection())
         {
             return await dbConnection.QueryFirstOrDefaultAsync<Environment2D>(query, new { Id = id });
@@ -38,7 +38,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
         await ValidateEnvironment(environment, true);
 
         // If validation passes, insert the new environment
-        var insertQuery = "INSERT INTO Environment2Ds (Id, Name, MaxHeight, MaxWidth, UserId) " +
+        var insertQuery = "INSERT INTO Environment2D (Id, Name, MaxHeight, MaxWidth, UserId) " +
                           "VALUES (@Id, @Name, @MaxHeight, @MaxWidth, @UserId)";
         using (var dbConnection = CreateConnection())
         {
@@ -51,7 +51,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
         // Validate the environment (name, max size, and uniqueness for creation)
         await ValidateEnvironment(environment, false);
 
-        var query = "UPDATE Environment2Ds SET Name = @Name, MaxHeight = @MaxHeight, MaxWidth = @MaxWidth " +
+        var query = "UPDATE Environment2D SET Name = @Name, MaxHeight = @MaxHeight, MaxWidth = @MaxWidth " +
                     "WHERE Id = @Id";
         using (var dbConnection = CreateConnection())
         {
@@ -61,7 +61,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
 
     public async Task DeleteAsync(string id)
     {
-        var query = "DELETE FROM Environment2Ds WHERE Id = @Id";
+        var query = "DELETE FROM Environment2D WHERE Id = @Id";
         using (var dbConnection = CreateConnection())
         {
             await dbConnection.ExecuteAsync(query, new { Id = id });
@@ -88,7 +88,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
         if (isCreation)
         {
             // Check if the environment name already exists for the same user
-            var checkNameQuery = "SELECT COUNT(*) FROM Environment2Ds WHERE Name = @Name AND UserId = @UserId";
+            var checkNameQuery = "SELECT COUNT(*) FROM Environment2D WHERE Name = @Name AND UserId = @UserId";
             using (var dbConnection = CreateConnection())
             {
                 var existingEnvironmentCount = await dbConnection.ExecuteScalarAsync<int>(checkNameQuery, new { Name = environment.Name, UserId = environment.UserId });
@@ -99,7 +99,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
                 }
 
                 // First, check how many environments are in the database
-                var countQuery = "SELECT COUNT(*) FROM Environment2Ds";
+                var countQuery = "SELECT COUNT(*) FROM Environment2D";
                 var environmentCount = await dbConnection.ExecuteScalarAsync<int>(countQuery);
 
                 // If there are 5 or more environments, throw an exception
@@ -112,7 +112,7 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
         else
         {
             // For update: check if the name already exists for another environment (excluding the current environment being updated)
-            var checkNameQuery = "SELECT COUNT(*) FROM Environment2Ds WHERE Name = @Name AND UserId = @UserId AND Id != @Id";
+            var checkNameQuery = "SELECT COUNT(*) FROM Environment2D WHERE Name = @Name AND UserId = @UserId AND Id != @Id";
             using (var dbConnection = CreateConnection())
             {
                 var existingEnvironmentCount = await dbConnection.ExecuteScalarAsync<int>(checkNameQuery, new { Name = environment.Name, UserId = environment.UserId, Id = environment.Id });
