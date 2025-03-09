@@ -46,24 +46,36 @@ builder.Services
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Jwt:Authority"]; // URL of your Identity server or Auth service
-        options.Audience = builder.Configuration["Jwt:Audience"]; // Audience (client) name
-        options.RequireHttpsMetadata = true; // Set true in production for security reasons
+        options.Authority = builder.Configuration["Jwt:Authority"];
+        options.Audience = builder.Configuration["Jwt:Audience"];
+        options.RequireHttpsMetadata = true;
 
-        // Token validation parameters
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ClockSkew = TimeSpan.Zero
+        };
 
-            // Optional: Allowing you to set an expected Issuer or Audience if needed
-            ValidIssuer = builder.Configuration["Jwt:Issuer"], // Expected Issuer
-            ValidAudience = builder.Configuration["Jwt:Audience"], // Expected Audience
-
-            // Define the clock skew (expiration tolerance) to adjust for any time differences
-            ClockSkew = TimeSpan.Zero // Set to zero to prevent a grace period for token expiration
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                // Log or inspect the error details
+                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                // Log or inspect the validated token claims
+                var userClaims = context.Principal?.Claims;
+                Console.WriteLine("Token validated successfully, claims: " + string.Join(", ", userClaims.Select(c => c.Value)));
+                return Task.CompletedTask;
+            }
         };
     });
 
