@@ -55,7 +55,7 @@ public class Environment2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id, userId))
         {
             return Forbid(); // If the user is not authorized for this environment
         }
@@ -103,7 +103,7 @@ public class Environment2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id, userId))
         {
             return Forbid(); // If the user is not authorized to update this environment
         }
@@ -129,7 +129,7 @@ public class Environment2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(id, userId))
         {
             return Forbid(); // If the user is not authorized to delete this environment
         }

@@ -19,14 +19,6 @@ public class AuthorizationService
         _userManager = userManager;
     }
 
-    // Extract the user ID from the JWT token using the "sub" claim
-    private string GetUserIdFromToken()
-    {
-        // Directly retrieve the "sub" claim for user ID
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst("sub")?.Value;
-        return userId;
-    }
-
     // Check if the user exists in the system
     private async Task<bool> IsUserExistsAsync(string userId)
     {
@@ -40,9 +32,8 @@ public class AuthorizationService
     }
 
     // Check if the current user is authorized for the specific environment
-    public async Task<bool> IsUserAuthorizedForEnvironmentAsync(string environmentId)
+    public async Task<bool> IsUserAuthorizedForEnvironmentAsync(string environmentId, string userId)
     {
-        var userId = GetUserIdFromToken();
         if (userId == null || !await IsUserExistsAsync(userId))
         {
             return false; // No userId or user does not exist
@@ -53,9 +44,9 @@ public class AuthorizationService
     }
 
     // Check if the current user is authorized for a specific Object2D
-    public async Task<bool> IsUserAuthorizedForObjectAsync(string environmentId, string objectId)
+    public async Task<bool> IsUserAuthorizedForObjectAsync(string environmentId, string objectId, string userId)
     {
         // Example: You might want to check if the user has access to a specific object
-        return await IsUserAuthorizedForEnvironmentAsync(environmentId); // Customize this if needed
+        return await IsUserAuthorizedForEnvironmentAsync(environmentId, userId); // Customize this if needed
     }
 }

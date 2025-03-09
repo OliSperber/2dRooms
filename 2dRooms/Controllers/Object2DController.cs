@@ -32,7 +32,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId, userId))
         {
             return Forbid(); // If the user is not authorized for this environment
         }
@@ -57,7 +57,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id))
+        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id, userId))
         {
             return Forbid(); // If the user is not authorized for this object
         }
@@ -82,7 +82,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId, userId))
         {
             return Forbid(); // If the user is not authorized to create object in this environment
         }
@@ -104,7 +104,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id))
+        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id, userId))
         {
             return Forbid(); // If the user is not authorized to update this object
         }
@@ -130,7 +130,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id))
+        if (!await _authorizationService.IsUserAuthorizedForObjectAsync(environmentId, id, userId))
         {
             return Forbid(); // If the user is not authorized to delete this object
         }
