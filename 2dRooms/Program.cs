@@ -90,8 +90,7 @@ app.MapPost("/account/login/jwt", async (SignInManager<IdentityUser> signInManag
     }
 
     // Step 2: Create the JWT Token
-    var claims = new[]
-    {
+    var claims = new[] {
         new Claim(ClaimTypes.NameIdentifier, user.Id),
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim(ClaimTypes.Email, user.Email),
@@ -113,8 +112,7 @@ app.MapPost("/account/login/jwt", async (SignInManager<IdentityUser> signInManag
 
     // Step 3: Return the generated JWT token
     return Results.Ok(new { token = tokenString });
-})
-.RequireAuthorization();
+});
 
 // Log out functionality with Bearer token
 app.MapPost("/account/logout", async (SignInManager<IdentityUser> signInManager, [FromBody] object empty) =>
