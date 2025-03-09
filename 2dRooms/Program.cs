@@ -48,13 +48,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.Authority = builder.Configuration["Jwt:Authority"]; // URL of your Identity server or Auth service
         options.Audience = builder.Configuration["Jwt:Audience"]; // Audience (client) name
-        options.RequireHttpsMetadata = false; // Set true in production for security reasons
+        options.RequireHttpsMetadata = true; // Set true in production for security reasons
+
+        // Token validation parameters
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true
+            ValidateIssuerSigningKey = true,
+
+            // Optional: Allowing you to set an expected Issuer or Audience if needed
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], // Expected Issuer
+            ValidAudience = builder.Configuration["Jwt:Audience"], // Expected Audience
+
+            // Define the clock skew (expiration tolerance) to adjust for any time differences
+            ClockSkew = TimeSpan.Zero // Set to zero to prevent a grace period for token expiration
         };
     });
 
