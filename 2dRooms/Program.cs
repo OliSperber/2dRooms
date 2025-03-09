@@ -15,8 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AuthorizationService>();
 builder.Services.AddScoped<IEnvironment2DRepository, Environment2DRepository>();
 builder.Services.AddScoped<IObject2DRepository, Object2DRepository>();
+
 
 
 // Read SQL connection string
