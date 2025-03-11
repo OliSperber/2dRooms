@@ -87,6 +87,8 @@ public class Object2DController : ControllerBase
             return Forbid(); // If the user is not authorized to create object in this environment
         }
 
+        object2D.Id = Guid.NewGuid().ToString();
+
         object2D.EnvironmentId = environmentId; // Ensure the object is linked to the correct environment
         await _object2DRepository.CreateObjectAsync(object2D);
 

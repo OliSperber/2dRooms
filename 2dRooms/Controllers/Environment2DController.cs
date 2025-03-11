@@ -81,6 +81,8 @@ public class Environment2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
+        environment.Id = Guid.NewGuid().ToString();
+
         try
         {
             await _environmentRepository.CreateAsync(environment);
