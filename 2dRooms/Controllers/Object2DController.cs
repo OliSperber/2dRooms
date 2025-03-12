@@ -84,7 +84,7 @@ public class Object2DController : ControllerBase
 
         if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId, userId))
         {
-            return Forbid(); // If the user is not authorized to create object in this environment
+            return Forbid(userId, environmentId); // If the user is not authorized to create object in this environment
         }
 
         object2D.Id = Guid.NewGuid().ToString();
