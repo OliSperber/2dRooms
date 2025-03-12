@@ -32,11 +32,18 @@ public class AuthorizationService
     }
 
     // Check if the current user is authorized for the specific environment
-    public async Task<bool> IsUserAuthorizedForEnvironmentAsync(string environmentId, string userId)
+    public async Task<bool> IsUserAuthorizedForEnvironmentAsync(string environmentId)
     {
-        if (userId == null || !await IsUserExistsAsync(userId))
+        var user = _httpContextAccessor.HttpContext?.User;
+        if (user == null || !user.Identity.IsAuthenticated)
         {
-            return false; // No userId or user does not exist
+            return false; // User is not authenticated
+        }
+
+        var userId = _userManager.GetUserId(user); // Get user ID from claims
+        if (string.IsNullOrEmpty(userId) || !await IsUserExistsAsync(userId))
+        {
+            return false; // User ID is invalid or user does not exist
         }
 
         var environment = await _environmentRepository.GetByIdAsync(environmentId);
@@ -47,6 +54,6 @@ public class AuthorizationService
     public async Task<bool> IsUserAuthorizedForObjectAsync(string environmentId, string objectId, string userId)
     {
         // Example: You might want to check if the user has access to a specific object
-        return await IsUserAuthorizedForEnvironmentAsync(environmentId, userId); // Customize this if needed
+        return await IsUserAuthorizedForEnvironmentAsync(environmentId); // Customize this if needed
     }
 }

@@ -32,7 +32,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId, userId))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId))
         {
             return Forbid(); // If the user is not authorized for this environment
         }
@@ -82,7 +82,7 @@ public class Object2DController : ControllerBase
             return Unauthorized("User not authenticated.");
         }
 
-        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId, userId))
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId))
         {
             return Forbid(userId, environmentId); // If the user is not authorized to create object in this environment
         }
