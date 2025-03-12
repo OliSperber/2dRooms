@@ -1,6 +1,5 @@
-using _2dRooms.Repositories;
+﻿using _2dRooms.Repositories;
 using _2dRooms.Services;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +17,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AuthorizationService>();
 builder.Services.AddScoped<IEnvironment2DRepository, Environment2DRepository>();
 builder.Services.AddScoped<IObject2DRepository, Object2DRepository>();
-
-
 
 // Read SQL connection string
 var sqlConnectionString = builder.Configuration.GetValue<string>("SqlConnectionString");
@@ -45,14 +42,6 @@ builder.Services
         options.ConnectionString = sqlConnectionString;
     });
 
-// Configure Bearer Token options
-builder.Services
-    .AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme)
-    .Configure(options =>
-    {
-        options.BearerTokenExpiration = TimeSpan.FromMinutes(60);
-    });
-
 // Add authentication with JWT Bearer token
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -72,7 +61,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
-            // Fetch the key from your database or environment variable
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
 
             // Optional: Define the clock skew (tolerance for expiration times)
