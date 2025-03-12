@@ -46,6 +46,28 @@ public class Object2DController : ControllerBase
         return Ok(objects);
     }
 
+    // DELETE: api/environment2d/{environmentId}/object2d
+    [HttpDelete]
+    public async Task<IActionResult> DeleteObjectsByEnvironmentId(string environmentId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the user ID from the JWT token
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User not authenticated.");
+        }
+
+        if (!await _authorizationService.IsUserAuthorizedForEnvironmentAsync(environmentId))
+        {
+            return Forbid(); // If the user is not authorized for this environment
+        }
+
+        // Delete all Object2D records related to the environmentId
+        await _object2DRepository.DeleteObjectsByEnvironmentIdAsync(environmentId);
+
+        return NoContent(); // No content is returned as a success response after deletion
+    }
+
     // GET: api/environment2d/{environmentId}/object2d/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetObjectById(string environmentId, string id)

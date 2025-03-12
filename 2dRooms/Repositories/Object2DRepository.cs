@@ -65,5 +65,15 @@ public class Object2DRepository : SqlService, IObject2DRepository
             await connection.ExecuteAsync(query, new { Id = id });
         }
     }
+
+    // Delete objects by environmentID
+    public async Task DeleteObjectsByEnvironmentIdAsync(string environmentId)
+    {
+        var query = "DELETE FROM Object2D WHERE EnvironmentId = @EnvironmentId";
+        using (var connection = CreateConnection())
+        {
+            await connection.ExecuteAsync(query, new { EnvironmentId = environmentId });
+        }
+    }
 }
 

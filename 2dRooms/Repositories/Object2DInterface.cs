@@ -11,5 +11,6 @@ public interface IObject2DRepository
     Task CreateObjectAsync(Object2D object2D);
     Task UpdateObjectAsync(Object2D object2D);
     Task DeleteObjectAsync(string id);
+    Task DeleteObjectsByEnvironmentIdAsync(string environmentId);
 }
 

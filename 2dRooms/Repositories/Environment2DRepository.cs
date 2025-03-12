@@ -61,12 +61,19 @@ public class Environment2DRepository : SqlService, IEnvironment2DRepository
 
     public async Task DeleteAsync(string id)
     {
-        var query = "DELETE FROM Environment2D WHERE Id = @Id";
+        var deleteObject2DQuery = "DELETE FROM Object2D WHERE EnvironmentId = @Id";
+        var deleteEnvironment2DQuery = "DELETE FROM Environment2D WHERE Id = @Id";
+
         using (var dbConnection = CreateConnection())
         {
-            await dbConnection.ExecuteAsync(query, new { Id = id });
+            // Delete all related records in Object2D first
+            await dbConnection.ExecuteAsync(deleteObject2DQuery, new { Id = id });
+
+            // Then delete the record from Environment2D
+            await dbConnection.ExecuteAsync(deleteEnvironment2DQuery, new { Id = id });
         }
     }
+
 
     public void ValidateNameAndSize(Environment2D environment)
     {
